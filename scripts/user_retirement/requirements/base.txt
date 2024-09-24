@@ -162,7 +162,7 @@ unicodecsv==0.14.1
     # via -r scripts/user_retirement/requirements/base.in
 uritemplate==4.1.1
     # via google-api-python-client
-urllib3==1.26.19
+urllib3==1.26.20
     # via
     #   -c scripts/user_retirement/requirements/../../../requirements/constraints.txt
     #   botocore
