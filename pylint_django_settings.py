@@ -55,5 +55,42 @@ class SetDjangoSettingsChecker(BaseChecker):
             name_checker.config.django_settings_module = 'lms.envs.test'
 
 
+def _get_django_settings_module(arguments):
+    # pylint command should not run with modules from both cms and (lms, common) at once
+    cms_module = False
+    lms_module = False
+    common_module = False
+
+    for arg in arguments:
+        if arg.startswith('cms'):
+            cms_module = True
+        elif arg.startswith('lms'):
+            lms_module = True
+        elif arg.startswith('common'):
+            common_module = True
+
+    if cms_module and (lms_module or common_module):
+        # when cms module is present in pylint command, it can't be parired with (lms, common)
+        # as common and lms gives error with cms test settings
+        raise ArgumentCompatibilityError(
+            "Modules from both common and lms can't be paired with cms while running pylint"
+        )
+    elif cms_module:
+        # If a module from cms is present in pylint command arguments
+        # and ony other module from (openedx, pavelib) is present
+        # than test setting of cms is used
+        return 'cms.envs.test'
+    else:
+        # If any module form (lms, common, openedx, pavelib) is present in
+        # pylint command arguments than test setting of lms is used
+        return 'lms.envs.test'
+
+
 def register(linter):
-    linter.register_checker(SetDjangoSettingsChecker(linter))
+    """Required function to register the plugin."""
+    pass
+
+
+def load_configuration(linter):
+    name_checker = get_checker(linter, ForeignKeyStringsChecker)
+    name_checker.config.django_settings_module = _get_django_settings_module(linter.cmdline_parser.parse_args()[1])
