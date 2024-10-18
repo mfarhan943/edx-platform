@@ -110,7 +110,7 @@ libsass==0.10.0
 # lxml==5.2.1 introduced new extra so we'll nee to rename lxml --> lxml[html-clean]
 # This constraint can be removed once we upgrade to Python 3.11
 # Issue for unpinning: https://github.com/openedx/edx-platform/issues/35272
-lxml<5.0
+# lxml<5.0
 
 # Date: 2018-12-14
 # markdown>=3.4.0 has failures due to internal refactorings which causes the tests to fail
