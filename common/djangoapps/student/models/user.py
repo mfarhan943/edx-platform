@@ -1020,7 +1020,7 @@ class LoginFailures(models.Model):
         return record.failure_count >= max_failures_allowed / 2, record.failure_count
 
     @classmethod
-    def clear_lockout_counter(cls, user):
+    def clear_lockout_counter(cls, user):   # pylint: disable=useless-return
         """
         Removes the lockout counters (normally called after a successful login)
         """
@@ -1685,6 +1685,8 @@ class AllowedAuthUser(TimeStampedModel):
 class AccountRecoveryConfiguration(ConfigurationModel):
     """
     configuration model for recover account management command
+
+    .. no_pii:
     """
     csv_file = models.FileField(
         validators=[FileExtensionValidator(allowed_extensions=['csv'])],
@@ -1824,6 +1826,8 @@ class UserCelebration(TimeStampedModel):
 class UserPasswordToggleHistory(TimeStampedModel):
     """
     Keeps track of user password disable/enable history
+
+    .. no_pii:
     """
     user = models.ForeignKey(User, related_name='password_toggle_history', on_delete=models.CASCADE)
     comment = models.CharField(max_length=255, help_text=_("Add a reason"), blank=True, null=True)
